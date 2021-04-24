@@ -3,3 +3,7 @@
 ################################################################################
 
 /ElektaTest/bin/Debug/netcoreapp3.1
+/ElektaTest/.vs/ElektaTest/v16/.suo
+/ElektaTest/obj
+/NUnitTest/bin/Debug/netcoreapp3.1
+/NUnitTest/obj
