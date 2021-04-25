@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ElektaTest.Queries
+namespace ElektaTest.Domain.Queries
 {
     public interface IQueryHandler
     {

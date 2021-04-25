@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace ElektaTest.Contracts.Requests
+namespace ElektaTest.Contracts.Responses
 {
-    public class CancelAppointmentRequest 
+    public class AppointmentResponse
     {
         public Guid PatientId { get; set; }
 

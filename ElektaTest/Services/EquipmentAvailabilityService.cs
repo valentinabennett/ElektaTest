@@ -52,7 +52,7 @@ namespace ElektaTest.Services
                 //    "application/json");
 
                 //using var httpResponse =
-                //    await client.PutAsync($"/api/equipments/{cancelAppointmentRequest.EquipmentId}/cancelAppointment", dataJson);
+                //    await client.PutAsync($"/apiurl", dataJson);
 
                 //httpResponse.EnsureSuccessStatusCode();
                 return Task.CompletedTask;
@@ -65,5 +65,9 @@ namespace ElektaTest.Services
 
         }
 
+        public Task UpdateAppointment(UpdateAppointmentRequest request)
+        {
+            return Task.CompletedTask;
+        }
     }
 }

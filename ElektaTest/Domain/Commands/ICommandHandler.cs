@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace ElektaTest.Commands
+namespace ElektaTest.Domain.Commands
 {
     public interface ICommandHandler
     {

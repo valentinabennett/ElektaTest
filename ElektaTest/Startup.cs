@@ -1,21 +1,14 @@
-using ElektaTest.Commands;
-using ElektaTest.DbContexts;
-using ElektaTest.Queries;
+using ElektaTest.Domain.Commands;
+using ElektaTest.Domain.Queries;
+using ElektaTest.Exceptions;
+using ElektaTest.Infrastructure;
 using ElektaTest.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ElektaTest
 {
@@ -34,7 +27,6 @@ namespace ElektaTest
             services.AddControllers();
             services.AddTransient<IEquipmentAvailabilityService, EquipmentAvailabilityService>();
             services.AddTransient<IEmailNotificationService, EmailNotificationService>();
-            services.AddTransient<IAppointmentService, AppointmentService>();
             services.AddHttpClient();
 
             services.AddScoped<IQueryHandlerFactory, QueryHandlerFactory>();
@@ -64,6 +56,7 @@ namespace ElektaTest
             app.UseHttpsRedirection();
 
             app.UseRouting();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseAuthorization();
 

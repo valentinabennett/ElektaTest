@@ -1,9 +1,8 @@
-using ElektaTest.DbContexts;
-using ElektaTest.Domain;
+using ElektaTest.Infrastructure;
 using System;
 using System.Threading.Tasks;
 
-namespace ElektaTest.Commands
+namespace ElektaTest.Domain.Commands
 {
     public class AddAppointmentCommand : ICommand
     {
@@ -12,12 +11,12 @@ namespace ElektaTest.Commands
         public int EquipmentId { get; }
         public bool Cancelled { get; }
 
-        public AddAppointmentCommand(Guid patientId, DateTime appointmentTime, int equipmentId, bool cancelled)
+        public AddAppointmentCommand(Guid patientId, DateTime appointmentTime, int equipmentId)
         {
             PatientId = patientId;
             AppointmentTime = appointmentTime;
             EquipmentId = equipmentId;
-            Cancelled = cancelled;
+            Cancelled = false;
         }
     }
 

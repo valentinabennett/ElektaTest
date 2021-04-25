@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ElektaTest.Queries
+namespace ElektaTest.Domain.Queries
 {
     public class QueryHandlerFactory : IQueryHandlerFactory
     {

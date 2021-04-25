@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace ElektaTest.Queries
+namespace ElektaTest.Domain.Queries
 {
     public class QueryHandler : IQueryHandler
     {
