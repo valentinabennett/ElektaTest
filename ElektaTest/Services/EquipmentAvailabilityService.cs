@@ -1,22 +1,50 @@
-﻿using ElektaTest.Contracts.Requests;
-using ElektaTest.Contracts.Responses;
+﻿using ElektaTest.Contracts.Responses;
+using ElektaTest.IntegrationEvents;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace ElektaTest.Services
 {
     public class EquipmentAvailabilityService : IEquipmentAvailabilityService
     {
+        // 1. assamption - if  the equipment avaliability system has the endpoints that are exposed swagger (Open API Specification)
+        //files  then we could generate the clients. And use the Client to call the system endpoints.
+
+        // 2. Or use IHttpClientFactory to create client.
+
+        // 3. or for events messages could be used service bus
+
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<EquipmentAvailabilityService> _logger;
         public EquipmentAvailabilityService(IHttpClientFactory clientFactory, ILogger<EquipmentAvailabilityService> logger)
         {
             _clientFactory = clientFactory;
             _logger = logger;
+
+            SerializerSettings = new JsonSerializerSettings
+            {
+                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
+                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+                Formatting = Formatting.Indented,
+                TypeNameHandling = TypeNameHandling.Objects
+            };
+            SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
+        }
+
+        public JsonSerializerSettings SerializerSettings { get; set; }
+
+        public Task PublishMessageAsync(EventMessage eventMessage)
+        {
+            var jsonObjectString = JsonConvert.SerializeObject(eventMessage, SerializerSettings);
+            var messageBytes = Encoding.UTF8.GetBytes(jsonObjectString);
+            // send async
+            return Task.CompletedTask;
         }
 
         public Task<EquipmentAvailabilityResponse> CheckAvailability(DateTime appointmentTime)
@@ -24,9 +52,6 @@ namespace ElektaTest.Services
             try
             {
                 var client = _clientFactory.CreateClient();
-
-                // Assamption - http factory create client and send async request to api endpoint with http method GET  to get availibility info.
-
                 var response = new EquipmentAvailabilityResponse { EequipmentId = 1, IsAvailable = true, Date = appointmentTime };
 
                 return Task.FromResult(response);
@@ -36,38 +61,6 @@ namespace ElektaTest.Services
                 _logger.LogError($"Error to get availability: {e.Message}");
                 throw;
             }
-
-        }
-
-        public Task CancelAppointment(CancelAppointmentRequest cancelAppointmentRequest)
-        {
-            try
-            {
-                var client = _clientFactory.CreateClient();
-
-                // Assamption - send async request to external endpoint to cancel the appointment with http method PUT
-                //var dataJson = new StringContent(
-                //    JsonSerializer.Serialize(cancelAppointmentRequest),
-                //    Encoding.UTF8,
-                //    "application/json");
-
-                //using var httpResponse =
-                //    await client.PutAsync($"/apiurl", dataJson);
-
-                //httpResponse.EnsureSuccessStatusCode();
-                return Task.CompletedTask;
-            }
-            catch (Exception e)
-            {
-                _logger.LogError($"Error to cancel appointment: {e.Message}");
-                throw;
-            }
-
-        }
-
-        public Task UpdateAppointment(UpdateAppointmentRequest request)
-        {
-            return Task.CompletedTask;
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using ElektaTest.Contracts.Requests;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Threading.Tasks;
 
 namespace ElektaTest.Services

@@ -16,5 +16,6 @@ namespace ElektaTest.Infrastructure
         public int EequipmentId { get; set; }
 
         public bool Canceled { get; set; }
+
     }
 }

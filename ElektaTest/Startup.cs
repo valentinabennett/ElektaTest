@@ -2,6 +2,7 @@ using ElektaTest.Domain.Commands;
 using ElektaTest.Domain.Queries;
 using ElektaTest.Exceptions;
 using ElektaTest.Infrastructure;
+using ElektaTest.IntegrationEvents;
 using ElektaTest.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,7 @@ namespace ElektaTest
 
             services.AddScoped<ICommandHandlerFactory, CommandHandlerFactory>();
             services.AddScoped<ICommandHandler, CommandHandler>();
+            services.AddScoped<IEventPublisher, EventPublisher>();
 
             RegisterCommandHandlers(services);
             RegisterQueryHandlers(services);

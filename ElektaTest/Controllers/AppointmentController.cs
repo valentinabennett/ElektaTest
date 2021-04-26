@@ -5,6 +5,7 @@ using ElektaTest.Domain.Commands;
 using ElektaTest.Domain.Queries;
 using ElektaTest.Exceptions;
 using ElektaTest.Infrastructure;
+using ElektaTest.IntegrationEvents;
 using ElektaTest.Services;
 using ElektaTest.Validations;
 using Microsoft.AspNetCore.Mvc;
@@ -29,16 +30,19 @@ namespace ElektaTest.Controllers
         private readonly IEmailNotificationService _emailNotificationService;
         private readonly IQueryHandler _queryHandler;
         private readonly ICommandHandler _commandHandler;
+        private readonly IEventPublisher _eventPublisher;
+
 
         public AppointmentController(ILogger<AppointmentController> logger,
             IEmailNotificationService emailNotificationService, IEquipmentAvailabilityService equipmentAvailabilityService,
-            IQueryHandler queryHandler, ICommandHandler commandHandler)
+            IQueryHandler queryHandler, ICommandHandler commandHandler, IEventPublisher eventPublisher)
         {
             _logger = logger;
             _emailNotificationService = emailNotificationService;
             _equipmentAvailabilityService = equipmentAvailabilityService;
             _queryHandler = queryHandler;
             _commandHandler = commandHandler;
+            _eventPublisher = eventPublisher;
         }
 
         /// <summary>
@@ -114,8 +118,8 @@ namespace ElektaTest.Controllers
             {
                 var command = new CancelAppointmentCommand(request.PatientId, request.AppointmentTime);
 
-                await _commandHandler.Handle(command); await _equipmentAvailabilityService.CancelAppointment(request);
-
+                await _commandHandler.Handle(command);
+                await _eventPublisher.PublishAsync(new AppointmentCancelledIntegrationEvent(request.AppointmentTime, request.PatientId));
                 return NoContent();
             }
             catch (AppointmentNotFoundException ex)
@@ -156,7 +160,7 @@ namespace ElektaTest.Controllers
                 {
                     var command = new UpdateAppointmentCommand(request.PatientId, request.AppointmentTime, request.NewAppointmentTime);
                     await _commandHandler.Handle(command);
-                    await _equipmentAvailabilityService.UpdateAppointment(request);
+                    await _eventPublisher.PublishAsync(new AppointmentUpdatedIntegrationEvent(request));
                     return NoContent();
 
                 }

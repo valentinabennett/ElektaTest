@@ -1,5 +1,6 @@
-﻿using ElektaTest.Contracts.Requests;
-using ElektaTest.Contracts.Responses;
+﻿using ElektaTest.Contracts.Responses;
+using ElektaTest.IntegrationEvents;
+using Newtonsoft.Json;
 using System;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace ElektaTest.Services
     {
         Task<EquipmentAvailabilityResponse> CheckAvailability(DateTime appointmentTime);
 
-        Task CancelAppointment(CancelAppointmentRequest request);
+        JsonSerializerSettings SerializerSettings { get; set; }
 
-        Task UpdateAppointment(UpdateAppointmentRequest request);
+        Task PublishMessageAsync(EventMessage eventMessage);
     }
 }
