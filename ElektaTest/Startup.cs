@@ -27,6 +27,7 @@ namespace ElektaTest
         {
             services.AddControllers();
             services.AddTransient<IEquipmentAvailabilityService, EquipmentAvailabilityService>();
+            services.AddTransient<IEquipmentAvailabilityNotification, EquipmentAvailabilityNotification>();
             services.AddTransient<IEmailNotificationService, EmailNotificationService>();
             services.AddHttpClient();
 

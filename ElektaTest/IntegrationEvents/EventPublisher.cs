@@ -10,17 +10,17 @@ namespace ElektaTest.IntegrationEvents
 
     public class EventPublisher : IEventPublisher
     {
-        private readonly IEquipmentAvailabilityService _equipmentAvailabilityService;
+        private readonly IEquipmentAvailabilityNotification _equipmentAvailabilityNotification;
 
-        public EventPublisher(IEquipmentAvailabilityService equipmentAvailabilityService)
+        public EventPublisher(IEquipmentAvailabilityNotification equipmentAvailabilityNotification)
         {
-            _equipmentAvailabilityService = equipmentAvailabilityService;
+            _equipmentAvailabilityNotification = equipmentAvailabilityNotification;
         }
 
         public async Task PublishAsync(IIntegrationEvent integrationEvent)
         {
             var message = new EventMessage(integrationEvent);
-            await _equipmentAvailabilityService.PublishMessageAsync(message);
+            await _equipmentAvailabilityNotification.PublishMessageAsync(message);
         }
     }
 }

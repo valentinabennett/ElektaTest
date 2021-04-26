@@ -1,12 +1,7 @@
 ﻿using ElektaTest.Contracts.Responses;
-using ElektaTest.IntegrationEvents;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
-using Newtonsoft.Json.Serialization;
 using System;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ElektaTest.Services
@@ -18,7 +13,6 @@ namespace ElektaTest.Services
 
         // 2. Or use IHttpClientFactory to create client.
 
-        // 3. or for events messages could be used service bus
 
         private readonly IHttpClientFactory _clientFactory;
         private readonly ILogger<EquipmentAvailabilityService> _logger;
@@ -26,25 +20,7 @@ namespace ElektaTest.Services
         {
             _clientFactory = clientFactory;
             _logger = logger;
-
-            SerializerSettings = new JsonSerializerSettings
-            {
-                ContractResolver = new DefaultContractResolver { NamingStrategy = new SnakeCaseNamingStrategy() },
-                DateTimeZoneHandling = DateTimeZoneHandling.Utc,
-                Formatting = Formatting.Indented,
-                TypeNameHandling = TypeNameHandling.Objects
-            };
-            SerializerSettings.Converters.Add(new StringEnumConverter(new CamelCaseNamingStrategy()));
-        }
-
-        public JsonSerializerSettings SerializerSettings { get; set; }
-
-        public Task PublishMessageAsync(EventMessage eventMessage)
-        {
-            var jsonObjectString = JsonConvert.SerializeObject(eventMessage, SerializerSettings);
-            var messageBytes = Encoding.UTF8.GetBytes(jsonObjectString);
-            // send async
-            return Task.CompletedTask;
+         
         }
 
         public Task<EquipmentAvailabilityResponse> CheckAvailability(DateTime appointmentTime)
